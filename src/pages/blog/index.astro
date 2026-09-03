@@ -13,75 +13,119 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`文章 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 960px;
+				width: min(1120px, calc(100% - 2rem));
 			}
+
+			.hero {
+				display: grid;
+				grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+				gap: 2rem;
+				align-items: end;
+				padding: 1rem 0 2.5rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				margin-bottom: 2rem;
+			}
+
+			.hero h1 {
+				margin-bottom: 1rem;
+			}
+
+			.hero p,
+			.hero strong {
+				margin: 0;
+			}
+
+			.hero strong {
+				display: block;
+				font-size: 0.9rem;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				color: rgba(124, 211, 255, 0.82);
+				margin-bottom: 1rem;
+			}
+
+			.hero p {
+				color: rgba(241, 245, 249, 0.64);
+			}
+
 			ul {
-				display: flex;
-				flex-wrap: wrap;
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
 				gap: 2rem;
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
+
 			ul li * {
 				text-decoration: none;
-				transition: 0.2s ease;
+				transition: 0.18s ease;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
+
+			ul li {
+				min-width: 0;
 			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
+
 			ul li a {
-				display: block;
+				display: grid;
+				gap: 1rem;
+				height: 100%;
+				padding-bottom: 1.25rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 			}
+
+			ul li img {
+				width: 100%;
+				aspect-ratio: 1.8 / 1;
+				border-radius: 8px;
+				object-fit: cover;
+			}
+
 			.title {
 				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+				line-height: 1.2;
 			}
+
 			.date {
 				margin: 0;
-				color: rgb(var(--gray));
+				font-size: 0.92rem;
+				color: rgba(241, 245, 249, 0.52);
 			}
+
+			.description {
+				margin: 0;
+				color: rgba(241, 245, 249, 0.68);
+				font-size: 1rem;
+			}
+
 			ul li a:hover h4,
 			ul li a:hover .date {
 				color: rgb(var(--accent));
 			}
+
 			ul a:hover img {
-				box-shadow: var(--box-shadow);
+				filter: saturate(1.05);
 			}
+
 			@media (max-width: 720px) {
+				main {
+					width: min(1120px, calc(100% - 1.25rem));
+				}
+
+				.hero {
+					grid-template-columns: 1fr;
+					gap: 1rem;
+					padding-top: 0;
+				}
+
 				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+					grid-template-columns: 1fr;
+					gap: 1.4rem;
 				}
 			}
 		</style>
@@ -89,6 +133,14 @@ const posts = (await getCollection('blog')).sort(
 	<body>
 		<Header />
 		<main>
+			<section class="hero">
+				<div>
+					<strong>Archive</strong>
+					<h1>技术文章与项目记录</h1>
+					<p>按时间整理开发实践、部署笔记、问题拆解和阶段性复盘。</p>
+				</div>
+				<p>{posts.length} 篇内容，支持 Markdown 持续扩展。</p>
+			</section>
 			<section>
 				<ul>
 					{
@@ -99,6 +151,7 @@ const posts = (await getCollection('blog')).sort(
 										<Image width={720} height={360} src={post.data.heroImage} alt="" />
 									)}
 									<h4 class="title">{post.data.title}</h4>
+									<p class="description">{post.data.description}</p>
 									<p class="date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>

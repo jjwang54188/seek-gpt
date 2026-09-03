@@ -1,48 +1,243 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { FEATURED_POINTS, SITE_DESCRIPTION, SITE_INTRO, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: min(1120px, calc(100% - 2rem));
+			}
+
+			section {
+				padding: 2rem 0;
+			}
+
+			.hero {
+				display: grid;
+				grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+				gap: 2rem;
+				align-items: end;
+				padding-top: 3rem;
+				padding-bottom: 3rem;
+			}
+
+			.eyebrow,
+			.section-title strong {
+				display: block;
+				margin-bottom: 1rem;
+				font-size: 0.9rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				color: rgba(124, 211, 255, 0.82);
+			}
+
+			.hero h1 {
+				max-width: 10ch;
+				margin-bottom: 1rem;
+			}
+
+			.hero p {
+				max-width: 34rem;
+				margin: 0;
+				color: rgba(241, 245, 249, 0.68);
+			}
+
+			.hero-panel {
+				padding: 1.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 8px;
+				background: linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(8, 11, 18, 0.92));
+			}
+
+			.hero-panel p {
+				margin: 0;
+				font-size: 0.98rem;
+				color: rgba(241, 245, 249, 0.64);
+			}
+
+			.hero-panel ul {
+				list-style: none;
+				padding: 0;
+				margin: 1.5rem 0 0;
+				display: grid;
+				gap: 0.9rem;
+			}
+
+			.hero-panel li {
+				padding-top: 0.9rem;
+				border-top: 1px solid rgba(255, 255, 255, 0.08);
+				color: rgba(241, 245, 249, 0.8);
+				font-size: 0.98rem;
+			}
+
+			.section-head {
+				display: flex;
+				justify-content: space-between;
+				align-items: end;
+				gap: 1rem;
+				padding-bottom: 1.2rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				margin-bottom: 1.5rem;
+			}
+
+			.section-head p,
+			.section-head a {
+				margin: 0;
+				font-size: 0.98rem;
+			}
+
+			.post-grid {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 1.5rem;
+			}
+
+			.post-card {
+				display: grid;
+				gap: 1rem;
+				text-decoration: none;
+				color: inherit;
+			}
+
+			.post-card img {
+				width: 100%;
+				aspect-ratio: 1.5 / 1;
+				object-fit: cover;
+			}
+
+			.post-card p {
+				margin: 0;
+			}
+
+			.post-card .meta {
+				font-size: 0.92rem;
+				color: rgba(241, 245, 249, 0.52);
+			}
+
+			.post-card .desc {
+				font-size: 1rem;
+				color: rgba(241, 245, 249, 0.68);
+			}
+
+			.post-card:hover h3,
+			.post-card:hover .meta {
+				color: rgb(var(--accent));
+			}
+
+			.about-band {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+				gap: 2rem;
+				padding-top: 1rem;
+			}
+
+			.about-band p {
+				margin: 0;
+				color: rgba(241, 245, 249, 0.68);
+			}
+
+			@media (max-width: 900px) {
+				.post-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (max-width: 720px) {
+				main {
+					width: min(1120px, calc(100% - 1.25rem));
+				}
+
+				.hero,
+				.about-band,
+				.section-head {
+					grid-template-columns: 1fr;
+					display: grid;
+				}
+
+				.hero {
+					padding-top: 1.5rem;
+					gap: 1.5rem;
+				}
+
+				.hero h1 {
+					max-width: none;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<section class="hero">
+				<div>
+					<span class="eyebrow">Seek Blog</span>
+					<h1>写给长期积累的技术博客</h1>
+					<p>{SITE_INTRO}</p>
+				</div>
+				<div class="hero-panel">
+					<p>这是一个适合持续发布的静态博客基础版，已经具备上线、扩展和后续发文能力。</p>
+					<ul>
+						{FEATURED_POINTS.map((point) => <li>{point}</li>)}
+					</ul>
+				</div>
+			</section>
+
+			<section>
+				<div class="section-head">
+					<div class="section-title">
+						<strong>Latest Posts</strong>
+						<h2>最新文章</h2>
+					</div>
+					<a href="/blog">查看全部文章</a>
+				</div>
+				<div class="post-grid">
+					{
+						posts.map((post) => (
+							<a class="post-card" href={`/blog/${post.id}/`}>
+								{post.data.heroImage && (
+									<Image width={720} height={480} src={post.data.heroImage} alt="" />
+								)}
+								<p class="meta">{post.data.pubDate.toLocaleDateString('zh-CN')}</p>
+								<h3>{post.data.title}</h3>
+								<p class="desc">{post.data.description}</p>
+							</a>
+						))
+					}
+				</div>
+			</section>
+
+			<section>
+				<div class="section-head">
+					<div class="section-title">
+						<strong>About</strong>
+						<h2>关于这个站</h2>
+					</div>
+					<a href="/about">进入关于页</a>
+				</div>
+				<div class="about-band">
+					<p>
+						站点默认采用科技简约风格，结构克制、信息清晰，优先服务写作、阅读和检索。这个版本已经支持你后续直接在
+						<code>src/content/blog/</code>
+						里新增 Markdown 文章。
+					</p>
+					<p>
+						等你后面把真实内容补进来，这里可以继续扩展项目页、联系方式、自定义头像、社交链接和评论系统。
+					</p>
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>

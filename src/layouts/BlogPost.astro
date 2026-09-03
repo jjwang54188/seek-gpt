@@ -11,46 +11,75 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
 			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
+				width: min(1120px, calc(100% - 2rem));
+				margin: 0 auto;
+				padding: 2.5rem 0 4rem;
 			}
+
+			article {
+				display: grid;
+				gap: 2rem;
+			}
+
 			.hero-image {
 				width: 100%;
 			}
+
 			.hero-image img {
 				display: block;
 				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				border-radius: 8px;
+				object-fit: cover;
+				min-height: 280px;
 			}
+
 			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				width: min(760px, 100%);
+				margin: 0 auto;
+				padding: 0;
 			}
+
 			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
+				margin-bottom: 2rem;
+				padding-bottom: 1.25rem;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 			}
+
 			.title h1 {
-				margin: 0 0 0.5em 0;
+				margin: 0.4rem 0 1rem;
 			}
+
+			.title p {
+				margin: 0;
+				color: rgba(241, 245, 249, 0.68);
+			}
+
 			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.75rem;
+				font-size: 0.95rem;
+				color: rgba(241, 245, 249, 0.58);
 			}
+
 			.last-updated-on {
-				font-style: italic;
+				font-style: normal;
+			}
+
+			@media (max-width: 720px) {
+				main {
+					width: min(1120px, calc(100% - 1.25rem));
+					padding-top: 1.5rem;
+				}
+
+				.hero-image img {
+					min-height: 220px;
+				}
 			}
 		</style>
 	</head>
@@ -67,15 +96,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						<div class="date">
 							<FormattedDate date={pubDate} />
 							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
+								updatedDate && <div class="last-updated-on">更新于 <FormattedDate date={updatedDate} /></div>
 							}
 						</div>
 						<h1>{title}</h1>
-						<hr />
+						<p>{description}</p>
 					</div>
 					<slot />
 				</div>
