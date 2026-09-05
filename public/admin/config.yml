@@ -1,0 +1,47 @@
+locale: zh_Hans
+site_url: https://785000.xyz
+display_url: https://785000.xyz
+
+backend:
+  name: github
+  repo: jjwang54188/seek-gpt
+  branch: master
+  base_url: https://785000.xyz
+  auth_endpoint: /api/auth
+  commit_messages:
+    create: "发布文章：{{slug}}"
+    update: "更新文章：{{slug}}"
+    delete: "删除文章：{{slug}}"
+    uploadMedia: "上传图片：{{path}}"
+    deleteMedia: "删除图片：{{path}}"
+
+media_folder: public/uploads
+public_folder: /uploads
+media_processing:
+  enabled: true
+  format:
+    enabled: true
+    default: webp
+  quality: 82
+  strip_metadata: true
+  width: 1600
+  height: null
+
+collections:
+  - name: blog
+    label: 文章
+    label_singular: 文章
+    description: 在这里新建、编辑或删除博客文章。
+    folder: src/content/blog
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 摘要, name: description, widget: text, hint: "会显示在文章列表和搜索结果中。" }
+      - { label: 发布日期, name: pubDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: 封面图, name: heroImage, widget: image, required: false, hint: "可选。上传后会自动压缩为 WebP 图片。" }
+      - { label: 正文, name: body, widget: markdown }

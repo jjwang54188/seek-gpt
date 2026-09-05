@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
@@ -208,7 +207,12 @@ const posts = (await getCollection('blog'))
 						posts.map((post) => (
 							<a class="post-card" href={`/blog/${post.id}/`}>
 								{post.data.heroImage && (
-									<Image width={720} height={480} src={post.data.heroImage} alt="" />
+									<img
+										width="720"
+										height="480"
+										src={typeof post.data.heroImage === 'string' ? post.data.heroImage : post.data.heroImage.src}
+										alt=""
+									/>
 								)}
 								<p class="meta">{post.data.pubDate.toLocaleDateString('zh-CN')}</p>
 								<h3>{post.data.title}</h3>
