@@ -2,6 +2,7 @@
 title: '把文章写成可回看的工程记录'
 description: '不只是结论，更保留问题背景、定位路径和最终决策。'
 pubDate: 'Sep 03 2026'
+tags: ['写作', '工程实践', '复盘']
 heroImage: '../../assets/blog-placeholder-2.jpg'
 ---
 

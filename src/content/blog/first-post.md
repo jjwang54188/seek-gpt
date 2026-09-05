@@ -2,6 +2,7 @@
 title: '把个人博客先上线，而不是一直停在准备阶段'
 description: '从域名、托管到内容结构，先完成一个可访问、可迭代的最小版本。'
 pubDate: 'Sep 01 2026'
+tags: ['建站', '博客', '部署']
 heroImage: '../../assets/blog-placeholder-3.jpg'
 ---
 

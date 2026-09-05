@@ -39,10 +39,15 @@ collections:
     extension: md
     format: frontmatter
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    summary: "{{title}}"
+    summary: "{{title}} · {{pubDate}}"
     fields:
       - { label: 标题, name: title, widget: string }
       - { label: 摘要, name: description, widget: text, hint: "会显示在文章列表和搜索结果中。" }
       - { label: 发布日期, name: pubDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+
+      - { label: 标签, name: tags, widget: list, required: false, hint: "例如：Astro、部署、学习。每个标签单独输入一次。" }
+
+      - { label: 最后更新, name: updatedDate, widget: datetime, required: false, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, hint: "修改旧文章时填写，读者会看到更新时间。" }
+
       - { label: 封面图, name: heroImage, widget: image, required: false, hint: "可选。上传后会自动压缩为 WebP 图片。" }
       - { label: 正文, name: body, widget: markdown }

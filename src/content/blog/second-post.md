@@ -2,6 +2,7 @@
 title: '为什么静态博客依然是个人站最稳的选择'
 description: '低成本、易部署、性能稳定，尤其适合先把内容系统跑起来。'
 pubDate: 'Sep 02 2026'
+tags: ['博客', 'Astro', '静态网站']
 heroImage: '../../assets/blog-placeholder-4.jpg'
 ---
 
