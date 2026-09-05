@@ -6,7 +6,8 @@ backend:
   name: github
   repo: jjwang54188/seek-gpt
   branch: master
-  base_url: https://785000.xyz
+  # The Pages address remains reachable when a network filters the .xyz domain.
+  base_url: https://seek-gpt.pages.dev
   auth_endpoint: /api/auth
   commit_messages:
     create: "发布文章：{{slug}}"

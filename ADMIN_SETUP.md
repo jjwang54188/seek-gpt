@@ -11,6 +11,7 @@
    - Application name：`Seek 博客后台`
    - Homepage URL：`https://785000.xyz/admin/`
    - Authorization callback URL：`https://785000.xyz/api/callback`
+   - Add a second redirect URI：`https://seek-gpt.pages.dev/api/callback`
 3. 点击 **Register application**。复制页面上的 **Client ID**；再点 **Generate a new client secret**，立即复制 **Client secret**。这个 secret 只显示一次。
 4. 登录 Cloudflare，进入 **Workers & Pages** -> **seek-gpt** -> **Settings** -> **Variables and Secrets**。
 5. 在 **Production** 环境中添加两条变量，类型都选 **Secret**：

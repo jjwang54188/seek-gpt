@@ -4,6 +4,7 @@ interface Env {
 }
 
 const encoder = new TextEncoder();
+const trustedSiteHosts = new Set(['785000.xyz', 'seek-gpt.pages.dev']);
 
 function toBase64Url(bytes: Uint8Array) {
 	let value = '';
@@ -11,8 +12,8 @@ function toBase64Url(bytes: Uint8Array) {
 	return btoa(value).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
 }
 
-async function createState(origin: string, secret: string) {
-	const payload = JSON.stringify({ origin, issuedAt: Date.now() });
+async function createState(backendOrigin: string, siteOrigin: string, secret: string) {
+	const payload = JSON.stringify({ backendOrigin, siteOrigin, issuedAt: Date.now() });
 	const key = await crypto.subtle.importKey(
 		'raw',
 		encoder.encode(secret),
@@ -30,11 +31,13 @@ export const onRequestGet = async ({ request, env }: { request: Request; env: En
 	}
 
 	const url = new URL(request.url);
+	const siteHost = url.searchParams.get('site_id');
+	const siteOrigin = siteHost && trustedSiteHosts.has(siteHost) ? `https://${siteHost}` : url.origin;
 	const authorizeUrl = new URL('https://github.com/login/oauth/authorize');
 	authorizeUrl.searchParams.set('client_id', env.GITHUB_CLIENT_ID);
 	authorizeUrl.searchParams.set('redirect_uri', `${url.origin}/api/callback`);
 	authorizeUrl.searchParams.set('scope', 'public_repo');
-	authorizeUrl.searchParams.set('state', await createState(url.origin, env.GITHUB_CLIENT_SECRET));
+	authorizeUrl.searchParams.set('state', await createState(url.origin, siteOrigin, env.GITHUB_CLIENT_SECRET));
 
 	return Response.redirect(authorizeUrl, 302);
 };
