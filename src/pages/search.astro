@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
@@ -17,9 +17,9 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			button { padding: 0.7rem 1rem; border: 1px solid var(--accent); border-radius: 4px; color: #06111a; background: var(--accent); cursor: pointer; font: inherit; }
 			#status { color: rgba(241, 245, 249, 0.62); }
 			#results { display: grid; gap: 1.1rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
-			#results li { padding-bottom: 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-			#results a { color: rgb(var(--white)); font-size: 1.2rem; font-weight: 700; }
-			#results p { margin: 0.45rem 0 0; color: rgba(241, 245, 249, 0.68); }
+			#results :global(li) { padding-bottom: 1.1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+			#results :global(a) { color: rgb(var(--white)); font-size: 1.2rem; font-weight: 700; }
+			#results :global(p) { margin: 0.45rem 0 0; color: rgba(241, 245, 249, 0.68); }
 			mark { padding: 0; color: inherit; background: rgba(124, 211, 255, 0.32); }
 		</style>
 	</head>
@@ -42,6 +42,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 			const input = document.querySelector('#query');
 			const status = document.querySelector('#status');
 			const results = document.querySelector('#results');
+			let requestId = 0;
 
 			function textFromHtml(html) {
 				const template = document.createElement('template');
@@ -51,6 +52,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 			form?.addEventListener('submit', async (event) => {
 				event.preventDefault();
+				const currentRequest = ++requestId;
 				const query = input?.value.trim() || '';
 				results?.replaceChildren();
 				if (!query) {
@@ -63,6 +65,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 					await pagefind.init();
 					const search = await pagefind.search(query);
 					const matches = await Promise.all(search.results.slice(0, 20).map((result) => result.data()));
+					if (currentRequest !== requestId) return;
 					status.textContent = `找到 ${search.results.length} 篇相关文章。`;
 					for (const match of matches) {
 						const item = document.createElement('li');
@@ -75,7 +78,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 						results?.append(item);
 					}
 				} catch {
-					status.textContent = '搜索索引将在网站发布后可用，请稍后重试。';
+					if (currentRequest !== requestId) return;
+					status.textContent = '搜索加载失败，请检查网络后重新搜索，或前往文章页面浏览。';
 				}
 			});
 		</script>

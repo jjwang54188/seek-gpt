@@ -8,7 +8,7 @@ import Header from '../components/Header.astro';
 type Props = CollectionEntry<'blog'>['data'];
 type RelatedPost = Pick<CollectionEntry<'blog'>, 'id' | 'data'>;
 
-const { title, description, pubDate, updatedDate, heroImage, tags = [], relatedPosts = [] } = Astro.props as Props & { relatedPosts?: RelatedPost[] };
+const { title, description, pubDate, updatedDate, heroImage, tags = [], relatedPosts = [], searchable = true } = Astro.props as Props & { relatedPosts?: RelatedPost[]; searchable?: boolean };
 const heroImageSrc = heroImage && (typeof heroImage === 'string' ? heroImage : heroImage.src);
 ---
 
@@ -132,7 +132,7 @@ const heroImageSrc = heroImage && (typeof heroImage === 'string' ? heroImage : h
 	<body>
 		<Header />
 		<main>
-			<article data-pagefind-body>
+			<article data-pagefind-body={searchable ? true : undefined}>
 				<div class="hero-image">
 					{heroImageSrc && <img width="1020" height="510" src={heroImageSrc} alt="" />}
 				</div>
