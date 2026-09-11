@@ -5,10 +5,7 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav>
-		<div class="brand">
-			<a href="/">{SITE_TITLE}</a>
-			<span>Personal Blog</span>
-		</div>
+		<div class="brand"><a class="brand-mark" href="/" aria-label="首页">S</a><a class="brand-name" href="/">{SITE_TITLE}</a></div>
 		<div class="internal-links">
 			<HeaderLink href="/">首页</HeaderLink>
 			<HeaderLink href="/blog">文章</HeaderLink>
@@ -19,14 +16,12 @@ import HeaderLink from './HeaderLink.astro';
 </header>
 
 <style>
-	header {
-		position: sticky;
-		top: 0;
+	header { position: sticky; top: 0;
 		z-index: 10;
-		padding: 0 1.5rem;
-		background: rgba(248, 250, 252, 0.88);
+		padding: .8rem 1rem;
+		background: transparent;
 		backdrop-filter: blur(18px);
-		border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+		border-bottom: 0;
 	}
 
 	.brand {
@@ -35,21 +30,15 @@ import HeaderLink from './HeaderLink.astro';
 		gap: 0.9rem;
 	}
 
-	.brand a,
-	.brand a.active {
-		font-size: 1rem;
+	.brand a { font-size: 1rem;
 		font-weight: 700;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.04em;
 		color: rgb(var(--white));
 		text-decoration: none;
 	}
 
-	.brand span {
-		font-size: 0.82rem;
-		text-transform: uppercase;
-		letter-spacing: 0.12em;
-		color: rgba(30, 41, 59, 0.55);
-	}
+	.brand-mark { display:grid; place-items:center; width:2.1rem; height:2.1rem; border-radius:.75rem; color:white !important; background:linear-gradient(135deg,#f97316,#ec4899 55%,#7c3aed); }
+	.brand-name { margin-left:.6rem; }
 
 	nav {
 		display: flex;
@@ -57,7 +46,7 @@ import HeaderLink from './HeaderLink.astro';
 		justify-content: space-between;
 		max-width: 1120px;
 		margin: 0 auto;
-		min-height: 72px;
+		min-height: 3.2rem; padding:.45rem .7rem; border:1px solid rgba(15,23,42,.1); border-radius:1.15rem; background:rgba(255,255,255,.78); box-shadow:0 8px 24px rgba(15,23,42,.08);
 		gap: 1rem;
 	}
 
@@ -68,14 +57,14 @@ import HeaderLink from './HeaderLink.astro';
 	}
 
 	nav a {
-		padding: 0.75rem 0.9rem;
+		padding: 0.55rem 0.75rem;
 		color: rgba(30, 41, 59, 0.82);
-		border-bottom: 2px solid transparent;
+		border-radius:.7rem;
 		text-decoration: none;
 	}
 
 	nav a.active {
-		border-bottom-color: var(--accent);
+		background:rgba(59,130,246,.1);
 		color: rgb(var(--white));
 	}
 
@@ -85,7 +74,7 @@ import HeaderLink from './HeaderLink.astro';
 		}
 
 		nav {
-			min-height: 64px;
+			min-height: 3rem;
 		}
 
 		.brand {
