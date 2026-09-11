@@ -1,4 +1,5 @@
 locale: zh_Hans
+publish_mode: editorial_workflow
 site_url: https://785000.xyz
 display_url: https://785000.xyz
 
@@ -29,6 +30,27 @@ media_processing:
   height: null
 
 collections:
+  - name: settings
+    label: 网站设置
+    description: 修改后发布，网站会自动重新生成。
+    files:
+      - name: site
+        label: 主页资料
+        file: src/site.json
+        format: json
+        fields:
+          - { label: 显示名称, name: name, widget: string }
+          - { label: 网站副标题, name: subtitle, widget: string }
+          - { label: 个人简介, name: bio, widget: text }
+          - { label: 头像, name: avatar, widget: image, hint: "建议使用正方形图片。" }
+          - { label: 主页横幅, name: banner, widget: image, hint: "建议使用横向图片，至少 1600×600。" }
+          - label: 横幅显示位置
+            name: bannerPosition
+            widget: select
+            options:
+              - { label: 顶部, value: top }
+              - { label: 居中, value: center }
+              - { label: 底部, value: bottom }
   - name: blog
     label: 文章
     label_singular: 文章

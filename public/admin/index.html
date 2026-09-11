@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Seek 博客后台</title>
+    <style>
+      #seek-admin-links{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:8px;font:14px system-ui}
+      #seek-admin-links a{color:#334155;background:#fff;border:1px solid #dbe5ee;padding:9px 12px;border-radius:6px;text-decoration:none;box-shadow:0 3px 12px #0f172a14}
+      #seek-admin-links a:hover{border-color:#82afca;color:#367a9f}
+    </style>
   </head>
   <body>
     <div id="admin-loading" role="status" style="padding:32px;text-align:center;font-family:system-ui;color:#506477">正在加载博客后台…</div>
+    <nav id="seek-admin-links" aria-label="管理快捷入口">
+      <a href="https://github.com/jjwang54188/seek-gpt/commits/master" target="_blank" rel="noopener">修改记录</a>
+      <a href="https://dash.cloudflare.com/9420814d5f59a73805601c83079a4bfa/web-analytics" target="_blank" rel="noopener">访客统计</a>
+    </nav>
     <noscript>请启用浏览器的 JavaScript 后使用博客后台。</noscript>
     <script>
       const loading = document.getElementById('admin-loading');

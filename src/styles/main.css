@@ -1,5 +1,26 @@
 @tailwind components;
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 12% 24%, oklch(0.91 0.035 var(--hue) / 0.45), transparent 26rem),
+        radial-gradient(circle at 88% 70%, oklch(0.94 0.025 calc(var(--hue) + 45) / 0.35), transparent 30rem);
+    z-index: -1;
+}
+
+.card-base {
+    box-shadow: 0 14px 38px rgb(74 96 120 / 0.07);
+    border: 1px solid rgb(255 255 255 / 0.78);
+}
+
+:root.dark .card-base {
+    box-shadow: none;
+    border-color: rgb(255 255 255 / 0.05);
+}
+
 @layer components {
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
