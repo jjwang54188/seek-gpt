@@ -1,16 +1,5 @@
-import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
+import {getSortedPosts} from '../utils/content-utils';
 export async function GET(context) {
-	const posts = await getCollection('blog');
-	return rss({
-		title: SITE_TITLE,
-		description: SITE_DESCRIPTION,
-		site: context.site,
-		items: posts.map((post) => ({
-			...post.data,
-			link: `/blog/${post.id}/`,
-		})),
-	});
+return rss({title:'Seek',description:'中文个人博客',site:context.site,items:(await getSortedPosts()).map(p=>({title:p.data.title,description:p.data.description,pubDate:p.data.published,link:'/posts/'+p.slug+'/'}))});
 }

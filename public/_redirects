@@ -1,0 +1,8 @@
+/blog /archive/ 301
+/blog/ /archive/ 301
+/blog/:slug /posts/:slug/ 301
+/blog/:slug/ /posts/:slug/ 301
+/search /archive/ 302
+/search/ /archive/ 302
+/tags/:tag /archive/?tag=:tag 301
+/tags/:tag/ /archive/?tag=:tag 301

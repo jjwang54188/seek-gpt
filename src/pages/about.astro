@@ -1,35 +1,25 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+
+const aboutPost = await getEntry("spec", "about");
+
+if (!aboutPost) {
+	throw new Error("About page content not found");
+}
+
+const { Content } = await render(aboutPost);
 ---
-
-<Layout
-	searchable={false}
-	title="关于 Seek"
-	description="一个偏工程实践、开发记录和长期写作的个人空间。"
-	pubDate={new Date('September 03 2026')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		这里不是展示型主页，而是一个长期积累内容的工作台。站点会持续记录开发中的问题拆解、项目复盘、工具链使用经验，以及学习过程里真正有保留价值的部分。
-	</p>
-
-	<p>
-		我更关注工程上的真实细节，例如为什么这样选型、问题是怎么定位出来的、代码结构为什么要这样收敛，而不是只留下结果截图。这种写法更慢，但对以后回看更有意义。
-	</p>
-
-	<h2>内容方向</h2>
-	<p>
-		博客会以技术文章为主，覆盖前端工程、部署上线、开发工具、项目记录，以及一些经过整理的学习笔记。每篇文章都尽量保持结构清楚，方便快速浏览，也能在需要时重新进入上下文。
-	</p>
-
-	<h2>站点原则</h2>
-	<p>
-		页面设计保持克制，优先照顾阅读和检索效率。视觉上会偏科技简约，但不会为了装饰牺牲信息密度。内容上只保留真正想长期留下来的文字。
-	</p>
-
-	<h2>后续可扩展</h2>
-	<p>
-		这个版本已经支持 Markdown 发文、文章列表、独立文章页、RSS 和站点地图，适合先上线，再逐步补充真实文章、项目页和联系方式。
-	</p>
-</Layout>
+<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
+    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+        <div class="card-base z-10 px-9 py-6 relative w-full ">
+            <Markdown class="mt-2">
+                <Content />
+            </Markdown>
+        </div>
+    </div>
+</MainGridLayout>
