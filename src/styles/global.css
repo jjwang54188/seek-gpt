@@ -1,12 +1,12 @@
 :root {
-	--accent: #7cd3ff;
-	--accent-dark: #32a9e6;
-	--bg: 8, 11, 18;
-	--bg-soft: 15, 23, 42;
-	--white: 241, 245, 249;
-	--text: 226, 232, 240;
-	--muted: 148, 163, 184;
-	--line: 255, 255, 255;
+	--accent: #3b82f6;
+	--accent-dark: #2563eb;
+	--bg: 248, 250, 252;
+	--bg-soft: 241, 245, 249;
+	--white: 15, 23, 42;
+	--text: 30, 41, 59;
+	--muted: 100, 116, 139;
+	--line: 15, 23, 42;
 }
 
 * {
@@ -23,8 +23,8 @@ body {
 	padding: 0;
 	text-align: left;
 	background:
-		radial-gradient(circle at top, rgba(48, 110, 155, 0.16), transparent 32%),
-		linear-gradient(180deg, #070b12 0%, #0a1220 52%, #070b12 100%);
+		radial-gradient(circle at top, rgba(191, 219, 254, 0.45), transparent 34%),
+		linear-gradient(180deg, #f8fafc 0%, #eef4fb 52%, #f8fafc 100%);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--text));
@@ -122,8 +122,8 @@ code {
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
-	background: rgba(15, 23, 42, 0.85);
-	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: #e2e8f0;
+	border: 1px solid rgba(15, 23, 42, 0.1);
 	overflow-x: auto;
 }
 
@@ -174,4 +174,11 @@ li {
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	white-space: nowrap;
+}
+
+/* Fuwari-inspired light surface overrides. */
+.profile-card, .featured-card, .post-row {
+	border-color: rgba(15, 23, 42, 0.1) !important;
+	background: rgba(255, 255, 255, 0.78) !important;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08) !important;
 }
