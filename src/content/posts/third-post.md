@@ -3,7 +3,7 @@ title: '把文章写成可回看的工程记录'
 description: '不只是结论，更保留问题背景、定位路径和最终决策。'
 published: '2026-09-03'
 tags: ['写作', '工程实践', '复盘']
-image: '/assets/blog-placeholder-2.jpg'
+image: '/assets/covers/notes.svg'
 ---
 
 很多技术笔记的问题是只记录“最后怎么做”，却没有保留“为什么会这么做”。时间一长，结论就失去了上下文。

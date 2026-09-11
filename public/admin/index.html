@@ -7,6 +7,21 @@
     <title>Seek 博客后台</title>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <div id="admin-loading" role="status" style="padding:32px;text-align:center;font-family:system-ui;color:#506477">正在加载博客后台…</div>
+    <noscript>请启用浏览器的 JavaScript 后使用博客后台。</noscript>
+    <script>
+      const loading = document.getElementById('admin-loading');
+      const observer = new MutationObserver(() => {
+        if (document.querySelector('#nc-root')) {
+          loading.remove();
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+      function adminLoadFailed() {
+        loading.textContent = '后台资源加载失败，请刷新页面重试。';
+      }
+    </script>
+    <script src="/admin/vendor/decap-3.16.2/decap-cms.js" onerror="adminLoadFailed()"></script>
   </body>
 </html>

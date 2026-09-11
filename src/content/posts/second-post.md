@@ -3,7 +3,7 @@ title: '为什么静态博客依然是个人站最稳的选择'
 description: '低成本、易部署、性能稳定，尤其适合先把内容系统跑起来。'
 published: '2026-09-02'
 tags: ['博客', 'Astro', '静态网站']
-image: '/assets/blog-placeholder-4.jpg'
+image: '/assets/covers/pages.svg'
 ---
 
 个人博客最重要的不是技术栈多复杂，而是内容能否稳定发布、长期维护，以及访问是否足够顺畅。

@@ -1,11 +1,17 @@
 # 关于
 
-这是 Seek 的个人博客，使用 [Fuwari](https://github.com/saicaca/fuwari) 开源主题。记录开发、部署和长期写作。
+你好，我是 Seek。
 
-::github{repo="saicaca/fuwari"}
+这里记录我的技术学习、开发实践，以及生活中值得留下的想法。
 
-> ### 主题图片来源
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539)，作者 [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908)，作者 [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
-> - [NEO TOKYO NOIR 01](https://www.pixiv.net/artworks/111024784)，作者 空色天絵
+## 这个博客记录什么
+
+- 学习过程中的发现和笔记。
+- 开发与部署中遇到的问题，以及解决的经过。
+- 对写作和日常生活的整理与回顾。
+
+慢慢学习，认真记录。
+
+---
+
+<small>主题插画署名：[Stella](https://www.pixiv.net/artworks/108916539) · [空色天絵](https://www.pixiv.net/artworks/111024784)。</small>
