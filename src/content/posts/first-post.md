@@ -1,9 +1,13 @@
 ---
-title: '把个人博客先上线，而不是一直停在准备阶段'
-description: '从域名、托管到内容结构，先完成一个可访问、可迭代的最小版本。'
-published: '2026-09-01'
-tags: ['建站', '博客', '部署']
-image: '/assets/covers/launch-anime.webp'
+title: 把个人博客先上线，而不是一直停在准备阶段
+draft: false
+description: 从域名、托管到内容结构，先完成一个可访问、可迭代的最小版本。
+published: 2026-09-01
+tags:
+  - 建站
+  - 博客
+  - 部署
+image: /assets/covers/launch-anime.webp
 ---
 
 很多个人博客一直停在“等我准备好再开始”。结果是域名买了，想法有了，真正对外可访问的站点却迟迟没有出现。
