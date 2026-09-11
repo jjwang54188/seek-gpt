@@ -53,7 +53,7 @@ export const profileConfig: ProfileConfig = {
 	name: site.name,
 	bio: site.bio,
 	links: [
-		{ name: "管理后台", icon: "material-symbols:edit-square-outline", url: "/admin/" },
+		{ name: "GitHub", icon: "fa6-brands:github", url: "https://github.com/jjwang54188" },
 	],
 };
 

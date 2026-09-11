@@ -13,5 +13,3 @@
 慢慢学习，认真记录。
 
 ---
-
-<small>主题插画署名：[Stella](https://www.pixiv.net/artworks/108916539) · [空色天絵](https://www.pixiv.net/artworks/111024784)。</small>

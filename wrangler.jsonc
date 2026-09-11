@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "seek-gpt",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-09-11",
+  "d1_databases": [
+    {
+      "binding": "VISITOR_DB",
+      "database_name": "seek-blog-visitors",
+      "database_id": "937435f1-b3bc-4654-a258-6c4170c409eb"
+    }
+  ]
+}

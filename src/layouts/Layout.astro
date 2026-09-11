@@ -145,8 +145,6 @@ const bannerOffset =
 
 		<slot name="head"></slot>
 
-		<link rel="alternate" type="application/rss+xml" title={profileConfig.name} href={`${Astro.site}rss.xml`}/>
-
 	</head>
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
 		  data-overlayscrollbars-initialize
@@ -156,6 +154,25 @@ const bannerOffset =
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>
+		<script is:inline>
+			(() => {
+				const send = (data) => navigator.sendBeacon?.('/api/events', new Blob([JSON.stringify(data)], {type: 'application/json'}));
+				let maxScroll = 0;
+				addEventListener('scroll', () => {
+					const total = document.documentElement.scrollHeight - innerHeight;
+					if (total > 0) maxScroll = Math.max(maxScroll, Math.round(scrollY / total * 100));
+				}, {passive: true});
+				document.addEventListener('click', (event) => {
+					const el = event.target instanceof Element ? event.target.closest('a,button') : null;
+					if (!el) return;
+					const label = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+					const href = el instanceof HTMLAnchorElement ? el.href : '';
+					send({type: 'click', path: location.pathname, target: label, detail: href.slice(0, 500)});
+				});
+				const started = Date.now();
+				addEventListener('pagehide', () => send({type: 'leave', path: location.pathname, detail: JSON.stringify({seconds: Math.round((Date.now()-started)/1000), maxScroll})}));
+			})();
+		</script>
 	</body>
 </html>
 
