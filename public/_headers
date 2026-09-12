@@ -1,3 +1,6 @@
+/admin/*
+  Cache-Control: no-cache, must-revalidate
+
 /downloads/python_cv2_handbook.html
   Content-Type: application/octet-stream
   Content-Disposition: attachment; filename="Python_OpenCV_Handbook.html"
