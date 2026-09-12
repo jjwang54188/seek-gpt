@@ -1,2 +1,26 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>内容编辑｜Seek 博客</title>
-<style>:root{--ink:#465266}*{box-sizing:border-box}body{margin:0;background:#f7f8fc;color:var(--ink);font-family:ui-rounded,"Microsoft YaHei",system-ui}#admin-loading{padding:70px;text-align:center}.seek-tools{position:fixed;right:20px;bottom:20px;z-index:99999;display:flex;gap:10px}.seek-tools a{padding:11px 16px;border:1px solid #f1ccd5;border-radius:999px;background:#fff;color:#ba6479;text-decoration:none;box-shadow:0 8px 24px #7f8da31c;font-weight:600}.seek-tools a:hover{background:#fff1f5}header,nav{font-family:ui-rounded,"Microsoft YaHei",system-ui!important}button,[role=button]{border-radius:10px!important}</style></head><body><div id="admin-loading" role="status">正在加载内容编辑器…</div><nav class="seek-tools"><a href="/manage/">后台首页</a><a href="/manage/#visitors">访客记录</a></nav><noscript>请启用 JavaScript。</noscript><script>const loading=document.getElementById('admin-loading');new MutationObserver((_,o)=>{if(document.querySelector('#nc-root')){loading.remove();o.disconnect()}}).observe(document.body,{childList:true,subtree:true});function adminLoadFailed(){loading.textContent='后台资源加载失败，请刷新重试。'}</script><script src="/admin/vendor/decap-3.16.2/decap-cms.js" onerror="adminLoadFailed()"></script></body></html>
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>内容编辑｜Seek 博客</title>
+<script>
+window.CMS_MANUAL_INIT=true;
+function routeSettings(){
+  if(location.hash.startsWith('#/collections/settings') && new URLSearchParams(location.search).get('editor')!=='settings') location.replace('/admin/?editor=settings'+location.hash);
+}
+routeSettings();addEventListener('hashchange',routeSettings);
+</script>
+<style>
+body{margin:0;background:#f7f8fc;color:#465266;font-family:system-ui,"Microsoft YaHei",sans-serif}
+#admin-loading{padding:70px;text-align:center}.seek-tools{position:fixed;bottom:0;left:0;right:0;z-index:9999;display:flex;align-items:center;gap:12px;padding:10px 16px;background:#f5f9ffff;border-top:1px solid #dbe5ef;min-height:48px;font-size:12px}.seek-tools a{color:#3678a5;white-space:nowrap;text-decoration:none}.seek-tools #save-status{flex:1;color:#53677b;line-height:1.5}#nc-root{padding-bottom:64px}@media(max-width:700px){.seek-tools{flex-wrap:wrap}.seek-tools #save-status{flex-basis:100%}}
+</style></head><body>
+<div id="admin-loading" role="status">正在加载内容编辑器…</div>
+<nav class="seek-tools"><span id="save-status" role="status" aria-live="polite">正在读取设置…</span><a href="/admin/">文章管理</a><a href="/admin/?editor=settings#/collections/settings/entries/site">网站设置</a><a href="/manage/">后台首页</a></nav>
+<noscript>请启用 JavaScript。</noscript>
+<script>
+const loading=document.getElementById('admin-loading');
+new MutationObserver((_,o)=>{if(document.querySelector('#nc-root')){loading.remove();o.disconnect()}}).observe(document.body,{childList:true,subtree:true});
+function adminLoadFailed(){loading.textContent='后台资源加载失败，请刷新重试。'}
+</script>
+<script src="/admin/vendor/decap-3.16.2/decap-cms.js" onerror="adminLoadFailed()"></script>
+<script src="/admin/preview.js?v=20260912-settings"></script>
+</body></html>

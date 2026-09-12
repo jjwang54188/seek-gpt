@@ -2,7 +2,7 @@
   "name": "Seek",
   "subtitle": "seek的网站",
   "bio": "记录开发、部署和长期写作。",
-  "avatar": "assets/images/demo-avatar.png",
-  "banner": "assets/images/demo-banner.png",
+  "avatar": "/uploads/site-avatar.png",
+  "banner": "/uploads/site-banner.png",
   "bannerPosition": "center"
 }
