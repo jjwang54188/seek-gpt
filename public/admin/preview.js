@@ -78,7 +78,7 @@
       {label:'横幅显示位置',name:'bannerPosition',widget:'select',default:'center',options:[{label:'顶部',value:'top'},{label:'居中',value:'center'},{label:'底部',value:'bottom'}]}
     ]}]
   };
-  CMS.init({config: settingsMode ? {site_url:'https://785000.xyz',display_url:'https://785000.xyz',media_folder:'public/uploads',public_folder:'/uploads',publish_mode:'simple',backend:{name:'github',repo:'jjwang54188/seek-gpt',branch:'master',base_url:'https://seek-gpt.pages.dev',auth_endpoint:'/api/auth',commit_messages:{update:'更新网站设置：{{slug}}',uploadMedia:'上传图片：{{path}}'}},collections:[settings]} : {}});
+  CMS.init({config: settingsMode ? {load_config_file:false,locale:'zh_Hans',site_url:'https://785000.xyz',display_url:'https://785000.xyz',media_folder:'public/uploads',public_folder:'/uploads',publish_mode:'simple',backend:{name:'github',repo:'jjwang54188/seek-gpt',branch:'master',base_url:'https://seek-gpt.pages.dev',auth_endpoint:'/api/auth',commit_messages:{update:'更新网站设置：{{slug}}',uploadMedia:'上传图片：{{path}}'}},collections:[settings]} : {}});
   status(settingsMode ? '网站设置：保存后自动部署，无需切换审核或发布状态。' : '文章：保存为草稿，再发布上线；勾选“草稿”会使文章不显示在主页。');
   if(settingsMode) { try { const pending=JSON.parse(sessionStorage.getItem('seek_pending_site'));if(pending)trackDeployment(pending); }catch{} }
 })();

@@ -1,5 +1,5 @@
-<button id="music-player-toggle" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90" aria-label="打开站内音乐播放器" aria-expanded="false" type="button">
-  <span aria-hidden="true">♫</span>
+<button id="music-player-toggle" class="btn-plain scale-animation rounded-lg h-11 px-3 md:px-5 font-bold gap-1 active:scale-90" aria-label="音乐" aria-controls="music-player-panel" aria-expanded="false" type="button">
+  <span aria-hidden="true">♫</span><span>音乐</span>
 </button>
 <div id="music-player-panel" class="music-player-panel float-panel float-panel-closed" role="dialog" aria-label="站内音乐播放器">
   <div class="music-player-title"><strong>站内音乐</strong><button id="music-player-close" type="button" aria-label="关闭音乐播放器">×</button></div>
@@ -19,19 +19,23 @@
   const toggle = document.getElementById('music-player-toggle');
   const panel = document.getElementById('music-player-panel');
   const close = document.getElementById('music-player-close');
-  const files = document.getElementById('music-files');
-  const audio = document.getElementById('music-audio');
+  const files = document.querySelector<HTMLInputElement>('#music-files');
+  const audio = document.querySelector<HTMLAudioElement>('#music-audio');
   const track = document.getElementById('music-track');
-  const playlist = [];
+  const playlist: {name:string;url:string}[] = [];
+  if (toggle && panel && files && audio && track) {
   let current = 0;
   const open = () => { panel?.classList.remove('float-panel-closed'); toggle?.setAttribute('aria-expanded','true'); };
   const hide = () => { panel?.classList.add('float-panel-closed'); toggle?.setAttribute('aria-expanded','false'); };
-  const load = (index, autoplay = false) => { if (!playlist.length) return; current=(index+playlist.length)%playlist.length; audio.src=playlist[current].url; track.textContent=playlist[current].name; if(autoplay) audio.play().catch(()=>{}); };
+  const load = (index: number, autoplay = false) => { if (!playlist.length) return; current=(index+playlist.length)%playlist.length; audio.src=playlist[current].url; track.textContent=playlist[current].name; if(autoplay) audio.play().catch(()=>{track.textContent=playlist[current].name+' · 请点击播放按钮重试';}); };
+  const clear = () => { audio.pause(); audio.removeAttribute('src'); audio.load(); playlist.forEach(item=>URL.revokeObjectURL(item.url)); playlist.splice(0); track.textContent='还没有选择音乐'; files.value=''; };
   toggle?.addEventListener('click', () => panel?.classList.contains('float-panel-closed') ? open() : hide());
   close?.addEventListener('click', hide);
-  files?.addEventListener('change', () => { playlist.splice(0); [...files.files].forEach(file => playlist.push({name:file.name,url:URL.createObjectURL(file)})); load(0); open(); });
+  files.addEventListener('change', () => { const selected=Array.from(files.files || []); if(!selected.length)return; clear(); selected.forEach(file => playlist.push({name:file.name,url:URL.createObjectURL(file)})); load(0); open(); });
   document.getElementById('music-prev')?.addEventListener('click', () => load(current-1,true));
   document.getElementById('music-next')?.addEventListener('click', () => load(current+1,true));
-  document.getElementById('music-clear')?.addEventListener('click', () => { playlist.splice(0); audio.removeAttribute('src'); audio.load(); track.textContent='还没有选择音乐'; if(files) files.value=''; });
+  document.getElementById('music-clear')?.addEventListener('click', clear);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')hide();});
   audio?.addEventListener('ended', () => load(current+1,true));
+  }
 </script>
