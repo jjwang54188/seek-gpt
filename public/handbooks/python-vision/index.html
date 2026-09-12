@@ -6,7 +6,8 @@
 <title>Python + OpenCV + YOLOv8 + ROS2 + Linux 学习手册</title>
 <style>
 body { margin: 0; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
-#tabbar { height: 48px; background: #1e293b; color: #fff; display: flex; align-items: center; gap: 6px; padding: 0 16px; position: relative; z-index: 100; }
+#tabbar { height: 48px; background: #1e293b; color: #fff; display: flex; align-items: center; gap: 6px; padding: 0 16px; position: relative; z-index: 100; overflow-x: auto; }
+#tabbar > button, #tabbar .logo { flex-shrink: 0; white-space: nowrap; }
 #tabbar .logo { font-weight: 700; margin-right: 14px; font-size: 15px; }
 #tabbar button { background: transparent; border: none; color: #cbd5e1; font-size: 14px; padding: 8px 18px; border-radius: 8px; cursor: pointer; }
 #tabbar button:hover { color: #fff; background: #334155; }
@@ -152,7 +153,7 @@ body { margin: 0; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", san
   <h1>全局知识库搜索</h1>
   <p class="all-search-intro">搜索 Python、OpenCV、NumPy、YOLOv8、ROS2 和 Linux 全部板块的内容。</p>
   <div class="all-search-box">
-    <input id="allkw" type="text" placeholder="搜索函数、命令、概念或关键词，如：数组、话题、权限、轮廓…" autofocus>
+    <input id="allkw" type="text" placeholder="搜索函数、命令、概念或关键词，如：数组、话题、权限、轮廓…">
     <span id="allcount"></span>
   </div>
   <div id="allresults"></div>
@@ -167,7 +168,7 @@ body { margin: 0; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", san
 <header>
   <h1>Python 入门笔记 · 学习查询手册</h1>
   <div class="search-box">
-    <input id="kw" type="text" placeholder="搜索知识点 / 函数 / 语法，如：列表推导式、lambda、异常、with…" autofocus>
+    <input id="kw" type="text" placeholder="搜索知识点 / 函数 / 语法，如：列表推导式、lambda、异常、with…">
     <span id="stat"></span>
   </div>
 </header>
