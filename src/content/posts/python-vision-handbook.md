@@ -17,9 +17,9 @@ lang: 'zh-CN'
 
 <p><a href="/handbooks/python-vision/" data-no-swup><strong>打开完整交互手册 →</strong></a></p>
 
-<a href="/downloads/python_cv2_handbook.html" download="Python_OpenCV_学习手册.html" data-no-swup>下载 HTML 手册，离线阅读</a>
+<a href="/downloads/python_cv2_handbook.zip" download="Python_OpenCV_学习手册.zip" data-no-swup>下载离线手册（ZIP，内含原版 HTML）</a>
 
-推荐点击上面的入口展开阅读。手册保留了原文件的板块切换、目录导航、关键词搜索和专注模式；下载后用浏览器打开，也可以直接使用。
+推荐点击上面的入口展开阅读。手册保留了原文件的板块切换、目录导航、关键词搜索和专注模式；下载后解压 ZIP，用浏览器打开里面的 HTML 文件，也可以直接使用。
 
 ## 这份手册包含什么
 
