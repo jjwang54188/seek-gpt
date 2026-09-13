@@ -1,0 +1,23 @@
+<section id="music-account" class="account-box">
+  <div><strong>我的网易云账号</strong><p id="account-status" role="status" aria-live="polite">正在检查登录状态…</p></div>
+  <button id="music-login" type="button">扫码登录网易云</button><button id="music-logout" type="button" hidden>退出网易云账号</button>
+  <div id="music-qr" hidden><img id="music-qr-image" alt="使用网易云音乐 App 扫描此登录二维码" width="240" height="240"/><p>请用网易云音乐 App 扫码，并在手机上确认。二维码有效期约 3 分钟。</p></div>
+  <small>非网易云官方客户端；使用你自己的账号授权，不解锁版权。登录凭证仅由本站服务端处理，加密临时存储，1 小时后过期；退出会删除本站会话，不会退出手机 App。</small>
+</section>
+<script is:inline>
+(() => {
+  const root=document.getElementById('music-account');if(!root||root.dataset.ready)return;root.dataset.ready='1';
+  const status=root.querySelector('#account-status'),login=root.querySelector('#music-login'),logout=root.querySelector('#music-logout'),box=root.querySelector('#music-qr');
+  let timer,expiry=0;const controller=new AbortController();
+  const api=async(action,post=true)=>{const r=await fetch('/api/music-account?action='+action,{method:post?'POST':'GET',headers:post?{'Content-Type':'application/json'}:{},...(post?{body:'{}'}:{}),signal:controller.signal,cache:'no-store'});let d;try{d=await r.json();}catch{throw Error('登录服务连接失败，请稍后重试。');}if(!r.ok)throw Error(d.error||'登录暂时不可用');return d;};
+  function show(d){login.hidden=!!d.loggedIn;logout.hidden=!d.loggedIn;box.hidden=true;status.textContent=d.loggedIn?'已登录：'+(d.nickname||'网易云用户')+'（本站会话最多保留 1 小时）':'未登录：仍可搜索和播放网易云允许的公开音源。';}
+  async function poll(){if(!root.isConnected)return;if(Date.now()>expiry){box.hidden=true;login.disabled=false;status.textContent='二维码已过期，请重新生成。';return;}try{const d=await api('poll');if(d.loggedIn){show(d);login.disabled=false;return;}status.textContent=d.confirm?'已扫描，请在手机网易云上确认登录。':'等待使用网易云 App 扫码…';timer=setTimeout(poll,3500);}catch(e){if(e.name!=='AbortError'){status.textContent=e.message;box.hidden=true;login.disabled=false;}}}
+  login.addEventListener('click',async()=>{clearTimeout(timer);login.disabled=true;status.textContent='正在获取网易云登录二维码…';try{const d=await api('start');if(!root.isConnected)return;expiry=d.expires;root.querySelector('#music-qr-image').src=d.image;box.hidden=false;status.textContent='请使用手机网易云 App 扫码确认。';timer=setTimeout(poll,3500);}catch(e){if(e.name!=='AbortError'){status.textContent=e.message;login.disabled=false;}}});
+  logout.addEventListener('click',async()=>{logout.disabled=true;try{await api('logout');show({loggedIn:false});}catch(e){status.textContent=e.message;}finally{logout.disabled=false;}});
+  api('status',false).then(d=>{if(root.isConnected)show(d);}).catch(e=>{if(e.name!=='AbortError')status.textContent=e.message;});
+  const observer=new MutationObserver(()=>{if(!root.isConnected){clearTimeout(timer);controller.abort();observer.disconnect();}});observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+<style>
+ .account-box{margin-bottom:24px;padding:18px;border:1px solid #aaa3;border-radius:16px}.account-box p,.account-box small{font-size:12px;line-height:1.8;color:var(--text-50)}.account-box small{display:block;margin-top:12px}.account-box button{padding:9px 14px;border-radius:10px;background:var(--btn-regular-bg);color:var(--btn-content);margin-top:10px}.account-box button:disabled{opacity:.5;cursor:wait}.account-box [hidden]{display:none}#music-qr{margin:18px 0}#music-qr-image{width:240px;max-width:100%;height:auto;border:12px solid white;border-radius:12px;background:white;image-rendering:pixelated}
+</style>

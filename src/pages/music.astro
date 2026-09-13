@@ -1,6 +1,7 @@
 ---
 import MainGridLayout from '../layouts/MainGridLayout.astro';
 import MusicSearch from '../components/MusicSearch.astro';
+import MusicAccount from '../components/MusicAccount.astro';
 ---
 <MainGridLayout title="音乐" description="Seek 的站内音乐空间 · 网易云音乐歌单">
   <section class="music-room card-base">
@@ -9,6 +10,7 @@ import MusicSearch from '../components/MusicSearch.astro';
       <div class="record" aria-hidden="true"><span>♫</span></div>
     </header>
     <div class="room-content">
+      <MusicAccount />
       <MusicSearch />
       <h2>发现音乐 <small>从榜单开始，或放入自己的歌单</small></h2>
       <div class="recommendations">

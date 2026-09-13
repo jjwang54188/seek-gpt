@@ -27,6 +27,7 @@
   function clear(){stage.replaceChildren();last=-1;}
   function controls(){stage.style.fontSize=settings.size.value+'px';stage.style.opacity=Number(settings.opacity.value)/100;stage.hidden=!settings.enabled.checked;find('size-value').textContent=settings.size.value+'px';find('opacity-value').textContent=settings.opacity.value+'%';find('speed-value').textContent=settings.speed.value+'秒';find('offset-value').textContent=settings.offset.value+'秒';clear();}
   Object.values(settings).forEach(input=>input.addEventListener('input',controls)); controls();
+  const cleanup=new MutationObserver(()=>{if(!root.isConnected){audio.pause();audio.removeAttribute('src');audio.load();searchController?.abort();lyricController?.abort();cleanup.disconnect();}});cleanup.observe(document.body,{childList:true,subtree:true});
   function sync(){
     const time=audio.currentTime+Number(settings.offset.value); let index=-1;for(let i=0;i<rows.length&&rows[i].time<=time;i++)index=i;
     if(index===last)return;last=index;

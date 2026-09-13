@@ -1,6 +1,7 @@
 // Public, read-only metadata. Never forward browser cookies or arbitrary URLs.
 import { netease } from '../_lib/netease';
-export async function onRequestGet({request}: {request: Request}) {
+import { readSession } from '../_lib/music-session';
+export async function onRequestGet({request,env}: {request: Request;env?:{VISITOR_DB?:any}}) {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
   let upstream: URL;
@@ -16,10 +17,11 @@ export async function onRequestGet({request}: {request: Request}) {
     upstream.search = new URLSearchParams({id,lv:'1',kv:'1',tv:'-1'}).toString();
   } else return Response.json({error:'不支持的音乐操作。'},{status:400});
   try {
+    const session=action==='stream'?await readSession(request,env?.VISITOR_DB):null;
     const body = action === 'search' ? upstream.searchParams.toString() : undefined;
     if (body) upstream.search = '';
     const response = action === 'stream'
-      ? await netease('/api/song/enhance/player/url/v1',{ids:JSON.stringify([Number(url.searchParams.get('id'))]),level:'standard',encodeType:'mp3'})
+      ? await netease('/api/song/enhance/player/url/v1',{ids:JSON.stringify([Number(url.searchParams.get('id'))]),level:'standard',encodeType:'mp3'},session?.state.cookie||'')
       : action === 'search'
       ? await netease('/api/search/get',{s:(url.searchParams.get('q')||'').trim(),type:1,offset:0,limit:20})
       : await fetch(upstream,{signal:AbortSignal.timeout(10000),headers:{Accept:'application/json'},redirect:'follow'});
