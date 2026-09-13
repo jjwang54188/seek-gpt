@@ -16,9 +16,9 @@ export async function onRequestGet({request}: {request: Request}) {
   } else return Response.json({error:'不支持的音乐操作。'},{status:400});
   try {
     const response = await fetch(upstream,{signal:AbortSignal.timeout(10000),headers:{Accept:'application/json'},redirect:'error'});
-    if (!response.ok) throw Error();
+    if (!response.ok) return Response.json({error:'网易云服务暂时拒绝此请求，请稍后重试。',upstreamStatus:response.status},{status:502});
     const data = await response.json() as any;
-    if (data.code !== 200) throw Error();
+    if (data.code !== 200) return Response.json({error:'网易云暂时未返回可用数据。',upstreamCode:Number(data.code)||0},{status:502});
     const result = action === 'search' ? {songs:(data.result?.songs || []).map((s:any)=>({id:String(s.id),name:String(s.name),artist:(s.artists || []).map((a:any)=>a.name).join(' / '),album:String(s.album?.name || ''),duration:Number(s.duration)||0,restricted:s.fee===1||s.fee===4}))} : {lyric:String(data.lrc?.lyric || '').slice(0,100000)};
     return Response.json(result,{headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
   } catch { return Response.json({error:'网易云暂时未返回可用数据，请稍后重试。'},{status:502}); }
