@@ -15,7 +15,9 @@ export async function onRequestGet({request}: {request: Request}) {
     upstream.search = new URLSearchParams({id,lv:'1',kv:'1',tv:'-1'}).toString();
   } else return Response.json({error:'不支持的音乐操作。'},{status:400});
   try {
-    const response = await fetch(upstream,{signal:AbortSignal.timeout(10000),headers:{Accept:'application/json'},redirect:'follow'});
+    const body = action === 'search' ? upstream.searchParams.toString() : undefined;
+    if (body) upstream.search = '';
+    const response = await fetch(upstream,{method:body?'POST':'GET',body,signal:AbortSignal.timeout(10000),headers:{Accept:'application/json',...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},redirect:'follow'});
     if (!response.ok) return Response.json({error:'网易云服务暂时拒绝此请求，请稍后重试。',upstreamStatus:response.status},{status:502});
     const data = await response.json() as any;
     if (data.code !== 200) return Response.json({error:'网易云暂时未返回可用数据。',upstreamCode:Number(data.code)||0},{status:502});
