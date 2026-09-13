@@ -1,5 +1,6 @@
 ---
 import MainGridLayout from '../layouts/MainGridLayout.astro';
+import MusicSearch from '../components/MusicSearch.astro';
 ---
 <MainGridLayout title="音乐" description="Seek 的站内音乐空间 · 网易云音乐歌单">
   <section class="music-room card-base">
@@ -8,6 +9,7 @@ import MainGridLayout from '../layouts/MainGridLayout.astro';
       <div class="record" aria-hidden="true"><span>♫</span></div>
     </header>
     <div class="room-content">
+      <MusicSearch />
       <h2>发现音乐 <small>从榜单开始，或放入自己的歌单</small></h2>
       <div class="recommendations">
         <button type="button" data-playlist="3778678" data-name="网易云热歌榜"><span class="cover warm">热歌<span>HOT HITS</span></span><strong>热歌榜</strong><small>正在流行的旋律 · 点击载入</small></button>
@@ -36,6 +38,7 @@ import MainGridLayout from '../layouts/MainGridLayout.astro';
   const mount = document.getElementById('netease-mount');
   function load(id, type, title) {
     if (!/^\d{1,20}$/.test(id)) return;
+    document.getElementById('music-search')?.dispatchEvent(new Event('seek:stop-music'));
     document.getElementById('selection-name').textContent = title;
     status.textContent = '已请求网易云播放器。请在下方点击播放；若空白或提示不可用，请尝试其他歌单。';
     const frame = document.createElement('iframe');

@@ -1,0 +1,62 @@
+<section id="music-search" class="search-room">
+  <form id="song-search-form"><label for="song-query">搜索网易云歌曲</label><div class="search-row"><input id="song-query" maxlength="80" required placeholder="输入歌名或歌手"/><button type="submit">搜索歌曲</button></div></form>
+  <p id="search-message" role="status" aria-live="polite">搜索结果可在本站播放；受限歌曲不保证可播。</p>
+  <ol id="song-results"></ol>
+  <section id="lyric-player" hidden>
+    <h3 id="song-playing">尚未选择歌曲</h3>
+    <audio id="song-audio" controls preload="none"></audio>
+    <p id="audio-message" role="status"></p>
+    <fieldset><legend>歌词弹幕</legend>
+      <label><input id="danmaku-enabled" type="checkbox" checked/> 开启歌词弹幕</label>
+      <label>字号 <input id="danmaku-size" type="range" min="14" max="32" value="20"/> <output id="size-value">20px</output></label>
+      <label>透明度 <input id="danmaku-opacity" type="range" min="30" max="100" value="90"/> <output id="opacity-value">90%</output></label>
+      <label>滚动时长 <input id="danmaku-speed" type="range" min="4" max="16" value="8"/> <output id="speed-value">8秒</output></label>
+      <label>歌词偏移 <input id="danmaku-offset" type="range" min="-5" max="5" step="0.5" value="0"/> <output id="offset-value">0秒</output></label>
+    </fieldset>
+    <div id="lyric-stage" aria-hidden="true"></div><p id="current-lyric">选择歌曲后加载歌词。</p>
+    <small>弹幕仅在此区域显示，不遮挡导航、文章或按钮。暂停、拖动进度时跟随播放器；正偏移让歌词提前显示。</small>
+  </section>
+</section>
+<script is:inline>
+(() => {
+  const root=document.getElementById('music-search'); if(!root || root.dataset.ready)return; root.dataset.ready='1';
+  const find=id=>root.querySelector('#'+id), audio=find('song-audio'), stage=find('lyric-stage');
+  let searchController, lyricController, rows=[], last=-1, generation=0;
+  const message=find('search-message');
+  const settings={enabled:find('danmaku-enabled'),size:find('danmaku-size'),opacity:find('danmaku-opacity'),speed:find('danmaku-speed'),offset:find('danmaku-offset')};
+  function clear(){stage.replaceChildren();last=-1;}
+  function controls(){stage.style.fontSize=settings.size.value+'px';stage.style.opacity=Number(settings.opacity.value)/100;stage.hidden=!settings.enabled.checked;find('size-value').textContent=settings.size.value+'px';find('opacity-value').textContent=settings.opacity.value+'%';find('speed-value').textContent=settings.speed.value+'秒';find('offset-value').textContent=settings.offset.value+'秒';clear();}
+  Object.values(settings).forEach(input=>input.addEventListener('input',controls)); controls();
+  function sync(){
+    const time=audio.currentTime+Number(settings.offset.value); let index=-1;for(let i=0;i<rows.length&&rows[i].time<=time;i++)index=i;
+    if(index===last)return;last=index;
+    const text=rows[index]?.text || (rows.length?'等待歌词…':'暂无时间轴歌词');find('current-lyric').textContent=text;
+    if(index<0||!settings.enabled.checked||audio.paused)return;
+    const span=document.createElement('span');span.textContent=text;span.className='lyric-bullet';span.style.top=(index%3)*32+'px';span.style.animationDuration=settings.speed.value+'s';span.addEventListener('animationend',()=>span.remove());stage.append(span);while(stage.children.length>12)stage.firstChild.remove();
+  }
+  audio.addEventListener('timeupdate',sync);audio.addEventListener('seeking',clear);
+  audio.addEventListener('pause',()=>stage.querySelectorAll('span').forEach(s=>s.style.animationPlayState='paused'));
+  audio.addEventListener('play',()=>{document.getElementById('netease-mount')?.replaceChildren();stage.querySelectorAll('span').forEach(s=>s.style.animationPlayState='running');last=-1;sync();});
+  audio.addEventListener('error',()=>{find('audio-message').textContent='此歌曲当前无法站外播放（可能受版权、会员或网络限制），请尝试其他歌曲。';clear();});
+  audio.addEventListener('playing',()=>find('audio-message').textContent='正在播放网易云公开外链音源。');
+  root.addEventListener('seek:stop-music',()=>{audio.pause();clear();});
+  async function select(song){
+    const run=++generation;lyricController?.abort();lyricController=new AbortController();audio.pause();rows=[];clear();find('lyric-player').hidden=false;find('song-playing').textContent=song.name+' · '+song.artist;find('current-lyric').textContent='正在加载歌词…';
+    document.getElementById('netease-mount')?.replaceChildren();
+    audio.src='https://music.163.com/song/media/outer/url?id='+encodeURIComponent(song.id)+'.mp3';
+    find('audio-message').textContent='已载入歌曲，请点击播放。';
+    try{const r=await fetch('/api/music?action=lyrics&id='+encodeURIComponent(song.id),{signal:lyricController.signal});const data=await r.json();if(run!==generation||!root.isConnected)return;if(!r.ok)throw Error(data.error);
+      for(const line of data.lyric.split('\n')){const text=line.replace(/\[[^\]]*\]/g,'').trim();if(!text)continue;for(const m of line.matchAll(/\[(\d+):(\d+(?:\.\d+)?)\]/g))rows.push({time:Number(m[1])*60+Number(m[2]),text});}rows.sort((a,b)=>a.time-b.time);find('current-lyric').textContent=rows.length?'歌词已载入，播放时同步显示。':'该歌曲没有可用的时间轴歌词。';
+    }catch(e){if(e.name!=='AbortError'&&run===generation)find('current-lyric').textContent='歌词暂时无法加载，音频播放不受影响。';}
+  }
+  find('song-search-form').addEventListener('submit',async e=>{
+    e.preventDefault();searchController?.abort();const controller=new AbortController();searchController=controller;const q=find('song-query').value.trim();if(!q)return;message.textContent='正在搜索…';find('song-results').replaceChildren();
+    try{const r=await fetch('/api/music?action=search&q='+encodeURIComponent(q),{signal:controller.signal});const data=await r.json();if(controller.signal.aborted||!root.isConnected)return;if(!r.ok)throw Error(data.error);message.textContent=data.songs.length?'找到 '+data.songs.length+' 首歌曲，点击选择，再按播放按钮。':'没有找到歌曲，换个关键词试试。';
+      for(const song of data.songs){const li=document.createElement('li'),button=document.createElement('button'),title=document.createElement('strong'),detail=document.createElement('small');button.type='button';title.textContent=song.name;detail.textContent=song.artist+' · '+song.album+(song.restricted?' · 可能受会员限制':'');button.append(title,detail);button.addEventListener('click',()=>select(song));li.append(button);find('song-results').append(li);}
+    }catch(e){if(e.name!=='AbortError')message.textContent=e.message||'搜索暂时不可用。';}
+  });
+})();
+</script>
+<style is:global>
+ #music-search{margin-bottom:26px}#music-search .search-row{display:flex;gap:10px;margin:12px 0}#music-search input:not([type=checkbox]):not([type=range]){min-width:0;flex:1;padding:12px;border-radius:10px;border:1px solid #aaa4;background:var(--card-bg)}#music-search button{padding:10px 15px;border-radius:10px;background:var(--btn-regular-bg);color:var(--btn-content)}#music-search p,#music-search small{font-size:12px;line-height:1.8;color:var(--text-50)}#song-results{max-height:320px;overflow:auto}#song-results button{display:block;width:100%;text-align:left;background:transparent;border-bottom:1px solid #aaa2}#song-results button:hover{background:var(--btn-plain-bg-hover)}#song-results strong,#song-results small{display:block}#lyric-player{margin-top:20px;padding:18px;border:1px solid #aaa3;border-radius:14px}#song-audio{width:100%;margin:12px 0}#music-search fieldset{display:flex;flex-wrap:wrap;gap:12px;font-size:12px}#music-search fieldset label{display:flex;align-items:center;gap:6px}#music-search input[type=range]{width:80px}#lyric-stage{height:112px;position:relative;overflow:hidden;background:var(--btn-regular-bg);border-radius:12px;margin-top:14px;pointer-events:none}#lyric-stage[hidden]{display:none}.lyric-bullet{position:absolute;left:100%;white-space:nowrap;color:var(--primary);animation:seek-lyric-scroll linear forwards} @keyframes seek-lyric-scroll{to{left:0;transform:translateX(-100%)}}@media(prefers-reduced-motion:reduce){#lyric-stage{display:none}}#music-search :focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+</style>
