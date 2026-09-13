@@ -53,7 +53,7 @@
     e.preventDefault();searchController?.abort();const controller=new AbortController();searchController=controller;const q=find('song-query').value.trim();if(!q)return;message.textContent='正在搜索…';find('song-results').replaceChildren();
     try{const r=await fetch('/api/music?action=search&q='+encodeURIComponent(q),{signal:controller.signal});const data=await r.json();if(controller.signal.aborted||!root.isConnected)return;if(!r.ok)throw Error(data.error);message.textContent=data.songs.length?'找到 '+data.songs.length+' 首歌曲，点击选择，再按播放按钮。':'没有找到歌曲，换个关键词试试。';
       for(const song of data.songs){const li=document.createElement('li'),button=document.createElement('button'),title=document.createElement('strong'),detail=document.createElement('small');button.type='button';title.textContent=song.name;detail.textContent=song.artist+' · '+song.album+(song.restricted?' · 可能受会员限制':'');button.append(title,detail);button.addEventListener('click',()=>select(song));li.append(button);find('song-results').append(li);}
-    }catch(e){if(e.name!=='AbortError')message.textContent=e.message||'搜索暂时不可用。';}
+    }catch(e){if(e.name!=='AbortError')message.textContent=e instanceof SyntaxError?'音乐服务连接失败，请稍后重试。':(e.message||'搜索暂时不可用。');}
   });
 })();
 </script>
