@@ -1,0 +1,70 @@
+---
+import MainGridLayout from '../layouts/MainGridLayout.astro';
+---
+<MainGridLayout title="音乐" description="Seek 的站内音乐空间 · 网易云音乐歌单">
+  <section class="music-room card-base">
+    <header class="room-hero">
+      <div><p class="eyebrow">SEEK MUSIC · 站内听歌</p><h1>给生活一点旋律</h1><p>写代码、读文章，也留一点时间听喜欢的歌。</p><span class="provider">音源平台：网易云音乐</span></div>
+      <div class="record" aria-hidden="true"><span>♫</span></div>
+    </header>
+    <div class="room-content">
+      <h2>发现音乐 <small>从榜单开始，或放入自己的歌单</small></h2>
+      <div class="recommendations">
+        <button type="button" data-playlist="3778678" data-name="网易云热歌榜"><span class="cover warm">热歌<span>HOT HITS</span></span><strong>热歌榜</strong><small>正在流行的旋律 · 点击载入</small></button>
+        <button type="button" data-playlist="3779629" data-name="网易云新歌榜"><span class="cover cool">新歌<span>NEW SOUNDS</span></span><strong>新歌榜</strong><small>寻找新鲜的声音 · 点击载入</small></button>
+      </div>
+      <form id="netease-form">
+        <label for="netease-link">听自己的网易云歌单 / 单曲</label>
+        <div class="input-row"><input id="netease-link" type="text" placeholder="粘贴 music.163.com 歌单或单曲链接" required maxlength="2048" /><button type="submit">载入音乐</button></div>
+        <p>支持公开歌单和单曲完整链接，不需要提供账号密码。选择仅保留在本次页面中。</p>
+      </form>
+      <section class="listening" aria-label="播放区域">
+        <div class="listening-heading"><h2 id="selection-name">现在听什么？</h2><span>网易云官方播放器</span></div>
+        <p id="music-status" role="status" aria-live="polite">点击上方榜单，或粘贴分享链接，即可在这里载入播放器。</p>
+        <div id="netease-mount"></div>
+      </section>
+      <details><summary>播放说明与隐私</summary><p>点击载入后，浏览器会连接网易云音乐，平台可能接收你的 IP、浏览器信息和自身 Cookie。本站不会索要网易云密码。</p><p>本站不是网易云官方客户端。外链可播范围由网易云决定，部分歌曲可能受版权、VIP 或地区限制。若播放器空白或歌曲不可用，请更换歌单或稍后重试；页面不会自动跳转。离开此音乐页会停止播放。</p></details>
+    </div>
+  </section>
+</MainGridLayout>
+<script is:inline>
+(() => {
+  const form = document.getElementById('netease-form');
+  if (!form || form.dataset.ready) return;
+  form.dataset.ready = 'true';
+  const status = document.getElementById('music-status');
+  const mount = document.getElementById('netease-mount');
+  function load(id, type, title) {
+    if (!/^\d{1,20}$/.test(id)) return;
+    document.getElementById('selection-name').textContent = title;
+    status.textContent = '已请求网易云播放器。请在下方点击播放；若空白或提示不可用，请尝试其他歌单。';
+    const frame = document.createElement('iframe');
+    frame.title = title + ' · 网易云播放器';
+    frame.src = 'https://music.163.com/outchain/player?type=' + type + '&id=' + id + '&auto=0&height=' + (type === '0' ? '430' : '90');
+    frame.width = '100%'; frame.height = type === '0' ? '450' : '110';
+    frame.style.border = '0'; frame.style.maxWidth = '510px';
+    frame.setAttribute('allow', 'autoplay');
+    frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    frame.referrerPolicy = 'no-referrer';
+    mount.replaceChildren(frame);
+  }
+  document.querySelectorAll('[data-playlist]').forEach(button => button.addEventListener('click', () => load(button.dataset.playlist, '0', button.dataset.name)));
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    try {
+      const text = document.getElementById('netease-link').value.trim();
+      const match = text.match(/https:\/\/[^\s]+/);
+      const link = new URL(match ? match[0] : text);
+      if (!['music.163.com','y.music.163.com'].includes(link.hostname) || link.protocol !== 'https:') throw Error();
+      const path = link.hash.startsWith('#/') ? new URL(link.hash.slice(1),link.origin) : link;
+      const id = path.searchParams.get('id');
+      const kind = path.pathname.match(/\/(playlist|song)(?:\/|$)/)?.[1];
+      if (!id || !/^\d{1,20}$/.test(id) || !kind) throw Error();
+      load(id, kind === 'song' ? '2' : '0', kind === 'song' ? '我的单曲' : '我的歌单');
+    } catch { status.textContent = '请粘贴网易云完整歌单或单曲链接（包含 id=数字）。短链接、账号主页和其他网站地址暂不支持。'; }
+  });
+})();
+</script>
+<style>
+  .music-room{color:var(--text-75);background:var(--card-bg)}.room-hero{padding:36px;display:flex;align-items:center;justify-content:space-between;gap:20px;background:linear-gradient(125deg,#fff1f1,#f5f1ff)}.eyebrow{font-size:11px;letter-spacing:2px;color:#ac6470;font-weight:700}h1{font-size:clamp(24px,4vw,34px);font-weight:800;color:#433d53;margin:12px 0} .room-hero p:not(.eyebrow){font-size:14px;color:#787182;line-height:1.8}.provider{display:inline-block;margin-top:20px;color:#bd5664;font-size:12px}.record{flex-shrink:0;width:120px;height:120px;border-radius:50%;background:repeating-radial-gradient(#353340 0 2px,#494653 3px 4px);display:grid;place-items:center;box-shadow:12px 14px 28px #65536630;transform:rotate(-15deg)}.record span{display:grid;place-items:center;background:#ed9ca6;color:white;border-radius:50%;width:46px;height:46px;font-size:25px}.room-content{padding:30px}h2{font-size:19px;font-weight:700;color:var(--text-90)}h2 small{display:block;font-size:12px;font-weight:400;margin-top:5px;color:var(--text-50)}.recommendations{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0 30px}.recommendations button{text-align:left;border-radius:16px;padding:8px;transition:background .2s}.recommendations button:hover{background:var(--btn-plain-bg-hover)}.cover{display:flex;flex-direction:column;justify-content:center;height:130px;border-radius:13px;padding:22px;font-size:28px;font-weight:800;letter-spacing:4px}.cover span{font-size:10px;letter-spacing:2px;margin-top:10px;opacity:.7}.warm{background:linear-gradient(125deg,#f9d8dc,#f8ece1);color:#a04d60}.cool{background:linear-gradient(125deg,#d8e5f6,#e8dcf4);color:#626895}.recommendations strong{display:block;margin:12px 0 4px}.recommendations small{font-size:11px;color:var(--text-50)}form{padding:20px;border:1px solid #a0a0b025;border-radius:16px}label{font-size:14px;font-weight:600}.input-row{display:flex;gap:10px;margin:12px 0}input{min-width:0;flex:1;border:1px solid #aaa3;border-radius:10px;padding:12px;background:var(--card-bg);font-size:12px} .input-row button{background:#d96879;color:white;border-radius:10px;padding:10px 16px;font-size:13px;white-space:nowrap}form p,details p{font-size:12px;line-height:1.8;color:var(--text-50)}.listening{margin-top:28px;border-top:1px solid #aaa2;padding-top:22px}.listening-heading{display:flex;justify-content:space-between;align-items:center;gap:10px}.listening-heading span{font-size:11px;color:#be6473}#music-status{font-size:12px;line-height:1.8;margin:12px 0;color:var(--text-50)}#netease-mount{display:flex;justify-content:center;overflow:hidden;border-radius:12px}details{font-size:12px;margin-top:22px;color:var(--text-50)}summary{cursor:pointer;margin-bottom:10px}@media(max-width:540px){.room-hero{padding:24px}.record{width:74px;height:74px}.record span{width:30px;height:30px;font-size:18px}.room-content{padding:20px}.input-row{flex-direction:column}.cover{height:110px;padding:16px}.listening-heading{align-items:flex-start;flex-direction:column}}button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid #d96879;outline-offset:3px}
+</style>

@@ -8,7 +8,6 @@ import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import Search from "./Search.svelte";
 import DisplaySettings from "./widget/DisplaySettings.svelte";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
-import MusicPlayer from "./MusicPlayer.astro";
 
 const className = Astro.props.class;
 
@@ -45,7 +44,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
                 </a>;
             })}
           </div>
-          <MusicPlayer></MusicPlayer>
+          <a href={url('/music/')} aria-label="音乐" class="btn-plain scale-animation rounded-lg h-11 px-3 md:px-5 font-bold gap-1"><span aria-hidden="true">♫</span>音乐</a>
         </div>
         <div class="flex">
             <!--<SearchPanel client:load>-->
