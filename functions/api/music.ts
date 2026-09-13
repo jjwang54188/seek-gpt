@@ -1,4 +1,5 @@
 // Public, read-only metadata. Never forward browser cookies or arbitrary URLs.
+import { netease } from '../_lib/netease';
 export async function onRequestGet({request}: {request: Request}) {
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
@@ -17,7 +18,9 @@ export async function onRequestGet({request}: {request: Request}) {
   try {
     const body = action === 'search' ? upstream.searchParams.toString() : undefined;
     if (body) upstream.search = '';
-    const response = await fetch(upstream,{method:body?'POST':'GET',body,signal:AbortSignal.timeout(10000),headers:{Accept:'application/json',...(body?{'Content-Type':'application/x-www-form-urlencoded'}:{})},redirect:'follow'});
+    const response = action === 'search'
+      ? await netease('/api/search/get',{s:(url.searchParams.get('q')||'').trim(),type:1,offset:0,limit:20})
+      : await fetch(upstream,{signal:AbortSignal.timeout(10000),headers:{Accept:'application/json'},redirect:'follow'});
     if (!response.ok) return Response.json({error:'网易云服务暂时拒绝此请求，请稍后重试。',upstreamStatus:response.status},{status:502});
     const data = await response.json() as any;
     if (data.code !== 200) return Response.json({error:'网易云暂时未返回可用数据。',upstreamCode:Number(data.code)||0},{status:502});

@@ -3,6 +3,7 @@
   "name": "seek-gpt",
   "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-09-11",
+  "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [
     {
       "binding": "VISITOR_DB",
